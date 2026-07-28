@@ -58,6 +58,13 @@ public class WalletFragment extends Fragment {
                 AddEditAccountDialogFragment.newInstanceForEdit(item.account, resolvedName)
                         .show(getChildFragmentManager(), "edit_account");
             }
+
+            @Override
+            public void onAccountDeleteClick(AccountWithBalance item) {
+                String resolvedName = DisplayNameResolver.resolve(requireContext(), item.account.getName());
+                DeleteAccountDialogFragment.newInstance(item.account.getId(), resolvedName)
+                        .show(getChildFragmentManager(), DeleteAccountDialogFragment.TAG);
+            }
         });
         binding.recyclerAccounts.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerAccounts.setAdapter(adapter);

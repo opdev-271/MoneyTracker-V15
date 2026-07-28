@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,12 +34,29 @@ public class SettingsPrefs {
     private SettingsPrefs() {
     }
 
+    /**
+     * Single shared source of truth for the hide-balance flag. Home's eye button and the
+     * Settings switch each used to keep their own copy in their own ViewModel, seeded once at
+     * construction, so whichever screen was already alive kept showing the stale state after
+     * the other one flipped it. Both now observe this instead.
+     */
+    private static final MutableLiveData<Boolean> balanceHidden = new MutableLiveData<>();
+
     public static boolean isBalanceHidden(Context context) {
         return prefs(context).getBoolean(KEY_HIDE_BALANCE, false);
     }
 
+    /** Main thread only - the value is read back synchronously right after every write. */
+    public static LiveData<Boolean> observeBalanceHidden(Context context) {
+        if (balanceHidden.getValue() == null) {
+            balanceHidden.setValue(isBalanceHidden(context));
+        }
+        return balanceHidden;
+    }
+
     public static void setBalanceHidden(Context context, boolean hidden) {
         prefs(context).edit().putBoolean(KEY_HIDE_BALANCE, hidden).apply();
+        balanceHidden.setValue(hidden);
     }
 
     public static long getActiveAccountId(Context context) {

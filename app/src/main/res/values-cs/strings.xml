@@ -87,6 +87,8 @@
     <string name="account_type_savings">Spoření</string>
     <string name="dialog_add_account_title">Přidat účet</string>
     <string name="dialog_edit_account_title">Upravit účet</string>
+    <string name="dialog_delete_account_title">Smazat účet?</string>
+    <string name="dialog_delete_account_message">Účet „%1$s“ a všechny jeho transakce i spořicí obálky budou trvale smazány. Tuto akci nelze vrátit zpět.</string>
 
     <!-- Savings envelopes -->
     <string name="savings_total_balance">Celkový zůstatek</string>

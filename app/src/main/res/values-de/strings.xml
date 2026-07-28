@@ -87,6 +87,8 @@
     <string name="account_type_savings">Sparen</string>
     <string name="dialog_add_account_title">Konto hinzufügen</string>
     <string name="dialog_edit_account_title">Konto bearbeiten</string>
+    <string name="dialog_delete_account_title">Konto löschen?</string>
+    <string name="dialog_delete_account_message">„%1$s“ und alle zugehörigen Transaktionen und Sparumschläge werden endgültig gelöscht. Das kann nicht rückgängig gemacht werden.</string>
 
     <!-- Savings envelopes -->
     <string name="savings_total_balance">Gesamtguthaben</string>

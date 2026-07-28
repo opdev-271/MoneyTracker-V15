@@ -32,6 +32,9 @@ public class AccountAdapter extends ListAdapter<AccountWithBalance, AccountAdapt
 
         /** Pencil icon tap: opens the add/edit account dialog. */
         void onAccountEditClick(AccountWithBalance item);
+
+        /** Trash icon tap: asks for confirmation before removing the account. */
+        void onAccountDeleteClick(AccountWithBalance item);
     }
 
     private final OnAccountClickListener listener;
@@ -62,6 +65,7 @@ public class AccountAdapter extends ListAdapter<AccountWithBalance, AccountAdapt
         private final TextView textBalance;
         private final TextView textEnveloped;
         private final ImageButton btnEdit;
+        private final ImageButton btnDelete;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,7 +75,8 @@ public class AccountAdapter extends ListAdapter<AccountWithBalance, AccountAdapt
             textBalance = itemView.findViewById(R.id.text_balance);
             textEnveloped = itemView.findViewById(R.id.text_enveloped);
             btnEdit = itemView.findViewById(R.id.btn_edit_account);
-            ViewAnimations.addPressFeedback(itemView, btnEdit);
+            btnDelete = itemView.findViewById(R.id.btn_delete_account);
+            ViewAnimations.addPressFeedback(itemView, btnEdit, btnDelete);
         }
 
         void bind(AccountWithBalance item, OnAccountClickListener listener) {
@@ -90,6 +95,7 @@ public class AccountAdapter extends ListAdapter<AccountWithBalance, AccountAdapt
             imageAccountType.setImageResource(AccountIcons.resolve(item.account.getAccountType()));
             imageAccountType.setColorFilter(onCard);
             btnEdit.setColorFilter(onCardMuted);
+            btnDelete.setColorFilter(onCardMuted);
 
             boolean showEnveloped = Account.TYPE_SAVINGS.equals(item.account.getAccountType()) && item.envelopedTotal > 0;
             if (showEnveloped) {
@@ -101,6 +107,7 @@ public class AccountAdapter extends ListAdapter<AccountWithBalance, AccountAdapt
 
             itemView.setOnClickListener(v -> listener.onAccountClick(item));
             btnEdit.setOnClickListener(v -> listener.onAccountEditClick(item));
+            btnDelete.setOnClickListener(v -> listener.onAccountDeleteClick(item));
         }
     }
 

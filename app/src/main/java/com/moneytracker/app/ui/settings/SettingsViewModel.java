@@ -14,7 +14,7 @@ import com.moneytracker.app.util.ThemePrefs;
 public class SettingsViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> language;
-    private final MutableLiveData<Boolean> hideBalance;
+    private final LiveData<Boolean> hideBalance;
     private final MutableLiveData<Boolean> colorCodeTransactions;
     private final MutableLiveData<Boolean> animationsEnabled;
     private final MutableLiveData<String> theme;
@@ -26,7 +26,7 @@ public class SettingsViewModel extends AndroidViewModel {
     public SettingsViewModel(@NonNull Application application) {
         super(application);
         language = new MutableLiveData<>(LocaleHelper.getPersistedLanguage(application));
-        hideBalance = new MutableLiveData<>(SettingsPrefs.isBalanceHidden(application));
+        hideBalance = SettingsPrefs.observeBalanceHidden(application);
         colorCodeTransactions = new MutableLiveData<>(SettingsPrefs.isColorCodeTransactions(application));
         animationsEnabled = new MutableLiveData<>(SettingsPrefs.isAnimationsEnabled(application));
         theme = new MutableLiveData<>(ThemePrefs.getThemeMode(application));
@@ -71,8 +71,8 @@ public class SettingsViewModel extends AndroidViewModel {
     }
 
     public void setHideBalance(boolean hidden) {
+        // Writing the pref is what updates hideBalance - and with it Home's eye button.
         SettingsPrefs.setBalanceHidden(getApplication(), hidden);
-        hideBalance.setValue(hidden);
     }
 
     public LiveData<Boolean> getColorCodeTransactions() {

@@ -135,8 +135,12 @@ public class AddEditAccountDialogFragment extends DialogFragment {
 
         if (isEdit) {
             builder.setNeutralButton(R.string.action_delete, (dialog, which) -> {
-                viewModel.deleteAccount(accountId);
+                String resolvedName = requireArguments().getString(ARG_NAME, "");
                 dismiss();
+                // Parent manager = WalletFragment's child manager, so the confirmation dialog
+                // reaches the same WalletViewModel this one uses.
+                DeleteAccountDialogFragment.newInstance(accountId, resolvedName)
+                        .show(getParentFragmentManager(), DeleteAccountDialogFragment.TAG);
             });
         }
 

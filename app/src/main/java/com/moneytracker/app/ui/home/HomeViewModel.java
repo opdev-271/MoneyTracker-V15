@@ -45,7 +45,7 @@ public class HomeViewModel extends AndroidViewModel {
     private final LiveData<List<AccountWithBalance>> accountsWithBalance;
     private final MediatorLiveData<Double> balance = new MediatorLiveData<>();
     private final LiveData<List<TransactionWithDetails>> recentTransactions;
-    private final MutableLiveData<Boolean> balanceHidden;
+    private final LiveData<Boolean> balanceHidden;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
@@ -74,7 +74,7 @@ public class HomeViewModel extends AndroidViewModel {
                 (ids == null || ids.isEmpty()) ? new MutableLiveData<>(new ArrayList<>())
                         : transactionRepository.getRecentTransactionsForAccounts(ids, RECENT_TRANSACTIONS_LIMIT));
 
-        balanceHidden = new MutableLiveData<>(SettingsPrefs.isBalanceHidden(application));
+        balanceHidden = SettingsPrefs.observeBalanceHidden(application);
     }
 
     private void recomputeResolvedIds() {
@@ -178,9 +178,8 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void toggleBalanceHidden() {
         boolean hidden = Boolean.TRUE.equals(balanceHidden.getValue());
-        boolean newValue = !hidden;
-        balanceHidden.setValue(newValue);
-        SettingsPrefs.setBalanceHidden(getApplication(), newValue);
+        // Writing the pref is what updates balanceHidden - and with it the Settings switch.
+        SettingsPrefs.setBalanceHidden(getApplication(), !hidden);
     }
 
     /** Account to preselect when quick-adding a transaction; -1 lets AddTransaction pick its own default. */
